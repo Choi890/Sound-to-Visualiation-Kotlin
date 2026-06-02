@@ -1,0 +1,22 @@
+{
+  "provider": "Mozilla Firefox Translations",
+  "registry": "https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/db/models.json",
+  "localRoutes": [
+    {
+      "route": "ko-en",
+      "type": "bundled"
+    },
+    {
+      "route": "en-ko",
+      "type": "bundled"
+    },
+    {
+      "route": "ja-en",
+      "type": "bundled",
+      "modelSha256": "a9bf800679bba570520e1161d7b4fbfcb957add32ca35812134add85689752ad"
+    }
+  ],
+  "selectableTargets": ["ko", "en"],
+  "autoDetectedInputs": ["ko", "en", "ja"],
+  "pivotLanguage": "en"
+}

@@ -1,0 +1,10 @@
+YAMNet class map
+
+Source:
+https://github.com/tensorflow/models/blob/master/research/audioset/yamnet/yamnet_class_map.csv
+
+Copyright belongs to the TensorFlow Authors and/or original contributors.
+Licensed under the Apache License, Version 2.0.
+
+This app includes the class map only for local AudioSet/YAMNet label
+matching and does not redistribute any third-party audio recordings.

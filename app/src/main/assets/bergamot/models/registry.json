@@ -1,0 +1,44 @@
+{
+  "koen": {
+    "from": "ko",
+    "to": "en",
+    "files": {
+      "model": "./models/koen/model.koen.intgemm.alphas.bin",
+      "lex": "./models/koen/lex.50.50.koen.s2t.bin",
+      "vocabs": [
+        "./models/koen/vocab.koen.spm"
+      ]
+    },
+    "config": {
+      "gemm-precision": "int8shiftAlphaAll"
+    }
+  },
+  "enko": {
+    "from": "en",
+    "to": "ko",
+    "files": {
+      "model": "./models/enko/model.enko.intgemm.alphas.bin",
+      "lex": "./models/enko/lex.50.50.enko.s2t.bin",
+      "vocabs": [
+        "./models/enko/vocab.enko.spm"
+      ]
+    },
+    "config": {
+      "gemm-precision": "int8shiftAlphaAll"
+    }
+  },
+  "jaen": {
+    "from": "ja",
+    "to": "en",
+    "files": {
+      "model": "./models/jaen/model.jaen.intgemm.alphas.bin",
+      "lex": "./models/jaen/lex.50.50.jaen.s2t.bin",
+      "vocabs": [
+        "./models/jaen/vocab.jaen.spm"
+      ]
+    },
+    "config": {
+      "gemm-precision": "int8shiftAlphaAll"
+    }
+  }
+}

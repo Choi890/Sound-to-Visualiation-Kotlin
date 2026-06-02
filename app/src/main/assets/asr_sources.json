@@ -1,0 +1,8 @@
+{
+  "provider": "k2-fsa sherpa-onnx",
+  "model": "sherpa-onnx-sense-voice-ko-en-ja-int8-2024-07-17",
+  "source": "k2-fsa sherpa-onnx SenseVoice 2024-07-17",
+  "documentation": "https://k2-fsa.github.io/sherpa/onnx/sense-voice/pretrained.html",
+  "localLanguages": ["ko", "en", "ja"],
+  "runtime": "Offline SenseVoice ASR via sherpa-onnx Android AAR"
+}
