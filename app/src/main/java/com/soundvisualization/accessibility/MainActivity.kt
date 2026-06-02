@@ -207,7 +207,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Configure an immersive visual surface before Compose starts drawing sound alerts.
+        // 소리 알림 화면이 전체 화면에 가깝게 보이도록 시스템 바와 하드웨어 가속 옵션을 먼저 설정한다.
+        // Compose UI는 이후에 이 설정 위에서 실시간 감지 상태를 시각화한다.
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
@@ -250,7 +251,8 @@ class MainActivity : ComponentActivity() {
                 CompositionLocalProvider(LocalAppStrings provides appLanguage.strings) {
                 var runtimeState by remember { mutableStateOf(SoundRuntimeState()) }
                 var activeEvent by remember { mutableStateOf(idleEvent()) }
-                // UI state mirrors detector/service state while local stores persist user preferences.
+                // 이 블록의 상태값들은 감지기, 음성 인식, 사용자 설정, 이벤트 기록을 화면에 연결한다.
+                // LocalAppStore에서 불러온 값은 사용자가 앱을 껐다 켜도 유지되는 설정이다.
                 var watchedName by remember { mutableStateOf(LocalAppStore.loadWatchedName(applicationContext)) }
                 var watchedNameDraft by rememberSaveable { mutableStateOf("") }
                 var alertSettings by remember {
@@ -276,7 +278,8 @@ class MainActivity : ComponentActivity() {
                 val storeScope = rememberCoroutineScope()
 
                 fun registerEvent(event: DetectedSoundEvent) {
-                    // A real event updates the active alert, optional feedback effects, and persisted history.
+                    // 감지된 이벤트가 들어오면 현재 알림, 화면 플래시, 진동, 저장된 이벤트 기록을 모두 갱신한다.
+                    // Idle 이벤트는 알림을 해제하는 상태로만 쓰고, 실제 기록에는 남기지 않는다.
                     if (event.kind != AlertKind.Idle) {
                         activeEvent = event
 

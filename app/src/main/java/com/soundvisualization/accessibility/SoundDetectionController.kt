@@ -29,7 +29,8 @@ class SoundDetectionController(
     private val onState: (SoundRuntimeState) -> Unit,
     private val onEvent: (DetectedSoundEvent) -> Unit,
 ) {
-    // Audio capture, ML classification, and UI state publishing are kept in one lifecycle controller.
+    // 이 컨트롤러는 마이크 캡처, YAMNet 분류, 사용자 학습 샘플, UI 상태 발행을 한 생명주기로 묶는다.
+    // Activity나 Service는 start/stop/updateSettings만 호출하고, 실제 오디오 루프는 여기서 관리한다.
     @Volatile
     private var audioClassifier: AudioClassifier? = null
     private var audioRecord: AudioRecord? = null
@@ -133,7 +134,8 @@ class SoundDetectionController(
 
     @SuppressLint("MissingPermission")
     private fun startCapture(enableDetection: Boolean) {
-        // The same microphone stream can feed visualization-only mode or full alert detection.
+        // 같은 마이크 스트림을 두 모드로 사용할 수 있다.
+        // startAudio는 레벨/스펙트럼 시각화만 켜고, start는 분류기까지 켜서 알림 이벤트를 만든다.
         if (!hasRecordPermission()) {
             return
         }
@@ -467,7 +469,8 @@ class SoundDetectionController(
     }
 
     private fun captureLoop(record: AudioRecord, worker: ExecutorService, captureSampleRate: Int) {
-        // Read small audio frames for responsive visuals, then batch enough samples for YAMNet.
+        // 짧은 프레임은 레벨 미터와 스펙트럼을 빠르게 갱신하는 데 사용한다.
+        // 동시에 약 1초 분량을 모아 YAMNet 모델 입력으로 보내, 화면 반응성과 분류 안정성을 함께 맞춘다.
         val framesPerInference = (captureSampleRate * INPUT_SECONDS).toInt()
         val framesPerRead = (captureSampleRate * READ_SECONDS).toInt()
         val inputBuffer = ShortArray(framesPerRead * channelCount)
@@ -1072,7 +1075,8 @@ class SoundDetectionController(
     }
 
     private fun signalHeuristicBoost(kind: AlertKind): Float {
-        // Heuristic boosts help short household sounds survive noisy YAMNet category scores.
+        // YAMNet 라벨 점수만으로는 짧은 생활 소리를 놓칠 수 있다.
+        // RMS, 피크, zero-crossing, transient, 주파수 대역 에너지를 보조 점수로 더해 문 두드림/벨/사이렌 같은 이벤트를 보강한다.
         val fingerprint = latestInputFingerprint
         val spectrum = latestState.spectrumBands
         if (fingerprint.size < SIGNAL_FEATURE_COUNT || spectrum.isEmpty()) return 0f
