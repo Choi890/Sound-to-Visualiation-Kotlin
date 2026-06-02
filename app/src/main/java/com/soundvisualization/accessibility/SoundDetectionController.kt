@@ -29,6 +29,7 @@ class SoundDetectionController(
     private val onState: (SoundRuntimeState) -> Unit,
     private val onEvent: (DetectedSoundEvent) -> Unit,
 ) {
+    // Audio capture, ML classification, and UI state publishing are kept in one lifecycle controller.
     @Volatile
     private var audioClassifier: AudioClassifier? = null
     private var audioRecord: AudioRecord? = null
@@ -132,6 +133,7 @@ class SoundDetectionController(
 
     @SuppressLint("MissingPermission")
     private fun startCapture(enableDetection: Boolean) {
+        // The same microphone stream can feed visualization-only mode or full alert detection.
         if (!hasRecordPermission()) {
             return
         }
@@ -465,6 +467,7 @@ class SoundDetectionController(
     }
 
     private fun captureLoop(record: AudioRecord, worker: ExecutorService, captureSampleRate: Int) {
+        // Read small audio frames for responsive visuals, then batch enough samples for YAMNet.
         val framesPerInference = (captureSampleRate * INPUT_SECONDS).toInt()
         val framesPerRead = (captureSampleRate * READ_SECONDS).toInt()
         val inputBuffer = ShortArray(framesPerRead * channelCount)
@@ -1069,6 +1072,7 @@ class SoundDetectionController(
     }
 
     private fun signalHeuristicBoost(kind: AlertKind): Float {
+        // Heuristic boosts help short household sounds survive noisy YAMNet category scores.
         val fingerprint = latestInputFingerprint
         val spectrum = latestState.spectrumBands
         if (fingerprint.size < SIGNAL_FEATURE_COUNT || spectrum.isEmpty()) return 0f

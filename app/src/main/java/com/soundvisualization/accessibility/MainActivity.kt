@@ -207,6 +207,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Configure an immersive visual surface before Compose starts drawing sound alerts.
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
@@ -249,6 +250,7 @@ class MainActivity : ComponentActivity() {
                 CompositionLocalProvider(LocalAppStrings provides appLanguage.strings) {
                 var runtimeState by remember { mutableStateOf(SoundRuntimeState()) }
                 var activeEvent by remember { mutableStateOf(idleEvent()) }
+                // UI state mirrors detector/service state while local stores persist user preferences.
                 var watchedName by remember { mutableStateOf(LocalAppStore.loadWatchedName(applicationContext)) }
                 var watchedNameDraft by rememberSaveable { mutableStateOf("") }
                 var alertSettings by remember {
@@ -274,6 +276,7 @@ class MainActivity : ComponentActivity() {
                 val storeScope = rememberCoroutineScope()
 
                 fun registerEvent(event: DetectedSoundEvent) {
+                    // A real event updates the active alert, optional feedback effects, and persisted history.
                     if (event.kind != AlertKind.Idle) {
                         activeEvent = event
 
